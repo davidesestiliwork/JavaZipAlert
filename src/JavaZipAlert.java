@@ -19,6 +19,8 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 
 import javax.swing.JFrame;
@@ -30,14 +32,24 @@ public class JavaZipAlert extends JFrame
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private int exitCode;
 	
 	public JavaZipAlert(String fileName)
 	{
 		super("JavaZip Alert");
 		
+		addWindowListener(new WindowAdapter()
+		{
+			@Override
+			public void windowClosing(WindowEvent arg0)
+			{
+				System.exit(exitCode);
+			}
+		});
+		
 		File zipFile = new File(fileName + ".zip");
 		
-		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		getContentPane().setLayout(new GridLayout(1, 1));
 		
 		JLabel label = new JLabel();
@@ -48,11 +60,13 @@ public class JavaZipAlert extends JFrame
 		{
 			label.setText(zipFile.getAbsolutePath() + " already exists");
 			label.setForeground(Color.RED);
+			exitCode = 1;
 		}
 		else
 		{
 			label.setText(zipFile.getAbsolutePath() + " doesn\'t exist");
 			label.setForeground(Color.GREEN);
+			exitCode = 0;
 		}
 
 		setSize(700, 150);
